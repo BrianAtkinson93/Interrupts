@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
 
 int signal_arrived = 0;
 
@@ -12,6 +14,7 @@ int foo()
 
 int main()
 {
+    signal(SIGUSR1, foo);
     while (!signal_arrived)
     {
         /* Do Nothing! */
