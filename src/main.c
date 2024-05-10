@@ -2,15 +2,8 @@
 #include <stdlib.h> // Standard functions like exit
 #include <signal.h> // For signal handling and macros
 #include <unistd.h> // Used for sleep
+#include "../headers/structs.h"
 
-// Structure to hold the table information
-typedef struct
-{
-    int sig_num;
-    const char *sig_name;
-    const char *action;
-    const char *description;
-} signal_info;
 
 // Array of signals and descriptions.
 signal_info signals[] = {
@@ -54,7 +47,6 @@ void handle_interrupt(int sig)
 
 int main()
 {
-    // Set up the signal handler
     /*
     The sigaction structure is defined as something like:
 
@@ -79,20 +71,18 @@ int main()
           receives the signal number as its only argument.
 
     */
-    int SET_ALARM = 0;
 
     printf("Setting up handling for SIGALRM...\n");
     struct sigaction sa;
 
-    if (SET_ALARM == 1) { sa.sa_handler = SIG_DFL; } // We can also set sa.sa_handler to SIG_DFL to set the default behavior
-    else { sa.sa_handler = handle_interrupt; }; // Set the function to handle the signal
+    if (SET_ALARM == 1) { sa.sa_handler = SIG_DFL; }    // We can also set sa.sa_handler to SIG_DFL to set the default behavior
+    else { sa.sa_handler = handle_interrupt; };         // Set the function to handle the signal
 
     sa.sa_flags = 0;          // No flags
     sigemptyset(&sa.sa_mask); // Allows other signals to interrupt the handler
 
     // Apply the signal action setting to SIGALRM
-    if (sigaction(SIGALRM, &sa, NULL) == -1)
-    {
+    if (sigaction(SIGALRM, &sa, NULL) == -1) {
         perror("sigaction");
         return EXIT_FAILURE;
     }
@@ -103,8 +93,7 @@ int main()
     printf("Timer set for 5 seconds. Waiting for interrupt...\n");
 
     // Simulate a long-running task that gets interrupted
-    while (1)
-    {
+    while (1) {
         sleep(1); // Sleep to simulate work and reduce CPU usage
         printf("Working...\n");
     }
