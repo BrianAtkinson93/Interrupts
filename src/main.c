@@ -32,6 +32,7 @@ signal_info signals[] = {
 // Signal handler function
 void handle_interrupt(int sig)
 {
+    printf("\nFunction called: hand_interrupt(%d)\n\n", sig);
     // Search for the signal in the array
     for (int i = 0; signals[i].sig_num != 0; i++)
     {
@@ -54,17 +55,47 @@ void handle_interrupt(int sig)
 int main()
 {
     // Set up the signal handler
-    struct sigaction sa;
-    sa.sa_handler = handle_interrupt; // Set the function to handle the signal
-    sa.sa_flags = 0;                  // No flags
-    sigemptyset(&sa.sa_mask);         // Allows other signals to interrupt the handler
+    /*
+    The sigaction structure is defined as something like:
 
-    // Apply the signal action setting to SIGALRM
-    if (sigaction(SIGALRM, &sa, NULL) == -1)
+        struct sigaction {
+            void     (*sa_handler)(int);
+            void     (*sa_sigaction)(int, siginfo_t *, void *);
+            sigset_t   sa_mask;
+            int        sa_flags;
+            void     (*sa_restorer)(void);
+        };
+
+    ...
+
+    sa_handler specifies the action to be associated with signum and
+    can be one of the following:
+
+       •  SIG_DFL for the default action.
+
+       •  SIG_IGN to ignore this signal.
+
+       •  A pointer to a signal handling function.  This function
+          receives the signal number as its only argument.
+
+    */
+    int SET_ALARM = 1;
+
+    if (SET_ALARM == 0)
     {
-        perror("sigaction");
-        return EXIT_FAILURE;
-    }
+        printf("Setting up handling for SIGALRM...\n");
+        struct sigaction sa;
+        sa.sa_handler = handle_interrupt; // Set the function to handle the signal
+        sa.sa_flags = 0;                  // No flags
+        sigemptyset(&sa.sa_mask);         // Allows other signals to interrupt the handler
+
+        // Apply the signal action setting to SIGALRM
+        if (sigaction(SIGALRM, &sa, NULL) == -1)
+        {
+            perror("sigaction");
+            return EXIT_FAILURE;
+        }
+    };
 
     // Configure the timer to fire an interrupt (SIGALRM) after 5 seconds
     alarm(5);
