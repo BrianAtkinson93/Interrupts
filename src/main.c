@@ -12,7 +12,7 @@ typedef struct
     const char *description;
 } signal_info;
 
-// Dictionary of signals and descriptions.
+// Array of signals and descriptions.
 signal_info signals[] = {
     {SIGHUP, "SIGHUP", "Terminate", "Hangup"},
     {SIGINT, "SIGINT", "Terminate", "Terminal interrupt signal"},
@@ -43,9 +43,8 @@ void handle_interrupt(int sig)
             break;
         }
     }
-    // printf("Interrupt received: SIGALRM\n");
-    // // Signal handling code here
-    // // After handling, you might reset the timer or handle the data
+    // Signal handling code here
+    // After handling, you might reset the timer or handle the data
 
     // Exit program or do additional tasks here
     printf("Handling complete, program will exit now.\n");
