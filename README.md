@@ -20,3 +20,6 @@ The program begins by setting up the handling mechanism for the `SIGALRM` signal
 * Signal Mask (`sigemptyset(&sa.sa_mask)`): This function initializes the signal mask to block no other signals when the `handle_interrupt` function is running, meaning it can be interrupted by other signals.  
 * Applying the Signal Action (`sigaction(SIGALRM, &sa, NULL)`): This line sets up the defined action for `SIGALRM` signal. If there is an error while setting up the signal action the program prints an error message and exits.
 
+## References
+
+sigaction(2) -- Linux manual pages [https://man7.org/linux/man-pages/man2/sigaction.2.html](https://man7.org/linux/man-pages/man2/sigaction.2.html) 
