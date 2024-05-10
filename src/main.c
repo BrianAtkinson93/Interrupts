@@ -79,23 +79,23 @@ int main()
           receives the signal number as its only argument.
 
     */
-    int SET_ALARM = 1;
+    int SET_ALARM = 0;
 
-    if (SET_ALARM == 0)
+    printf("Setting up handling for SIGALRM...\n");
+    struct sigaction sa;
+
+    if (SET_ALARM == 1) { sa.sa_handler = SIG_DFL; } // We can also set sa.sa_handler to SIG_DFL to set the default behavior
+    else { sa.sa_handler = handle_interrupt; }; // Set the function to handle the signal
+
+    sa.sa_flags = 0;          // No flags
+    sigemptyset(&sa.sa_mask); // Allows other signals to interrupt the handler
+
+    // Apply the signal action setting to SIGALRM
+    if (sigaction(SIGALRM, &sa, NULL) == -1)
     {
-        printf("Setting up handling for SIGALRM...\n");
-        struct sigaction sa;
-        sa.sa_handler = handle_interrupt; // Set the function to handle the signal
-        sa.sa_flags = 0;                  // No flags
-        sigemptyset(&sa.sa_mask);         // Allows other signals to interrupt the handler
-
-        // Apply the signal action setting to SIGALRM
-        if (sigaction(SIGALRM, &sa, NULL) == -1)
-        {
-            perror("sigaction");
-            return EXIT_FAILURE;
-        }
-    };
+        perror("sigaction");
+        return EXIT_FAILURE;
+    }
 
     // Configure the timer to fire an interrupt (SIGALRM) after 5 seconds
     alarm(5);
