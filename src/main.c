@@ -57,7 +57,7 @@ int main()
     struct sigaction sa;
     sa.sa_handler = handle_interrupt; // Set the function to handle the signal
     sa.sa_flags = 0;                  // No flags
-    sigemptyset(&sa.sa_mask);
+    sigemptyset(&sa.sa_mask);         // Allows other signals to interrupt the handler
 
     // Apply the signal action setting to SIGALRM
     if (sigaction(SIGALRM, &sa, NULL) == -1)
